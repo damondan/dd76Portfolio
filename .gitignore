@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# PNPM
+.pnpm-debug.log*
+
+# SvelteKit
+.svelte-kit/
+build/
+dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache
+.cache/
