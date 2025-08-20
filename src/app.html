@@ -1,0 +1,201 @@
+<!-- src/app.html -->
+<!DOCTYPE html>
+<html lang="en" class="%sveltekit.theme%">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Full-stack developer portfolio showcasing modern web applications and programming projects" />
+    <meta name="keywords" content="web developer, full-stack, portfolio, programming, javascript, svelte, react" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Your Name - Full-Stack Developer Portfolio" />
+    <meta property="og:description" content="Creating digital solutions that make a difference" />
+    <meta property="og:image" content="%sveltekit.assets%/og-image.png" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Your Name - Full-Stack Developer Portfolio" />
+    <meta name="twitter:description" content="Creating digital solutions that make a difference" />
+    <meta name="twitter:image" content="%sveltekit.assets%/og-image.png" />
+    
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover" class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>
+
+<!-- src/routes/+layout.svelte -->
+<script>
+  import '../app.css';
+  import '$lib/i18n';
+  import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
+  import { locale, waitLocale } from 'svelte-i18n';
+  import { changeLanguage } from '$lib/i18n';
+  
+  // Wait for locale to load
+  onMount(async () => {
+    if (browser) {
+      // Get saved language from localStorage
+      const savedLocale = localStorage.getItem('locale');
+      if (savedLocale) {
+        changeLanguage(savedLocale);
+      }
+    }
+    await waitLocale();
+  });
+</script>
+
+<!-- Wait for i18n to load before showing content -->
+{#if $locale}
+  <slot />
+{:else}
+  <!-- Loading screen -->
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+  </div>
+{/if}
+
+<!-- src/routes/+page.svelte -->
+<script>
+  import Layout from '$lib/components/Layout.svelte';
+  import LanguageSelector from '$lib/components/LanguageSelector.svelte';
+  import { _ } from 'svelte-i18n';
+</script>
+
+<svelte:head>
+  <title>{$_('hero.title')} - Portfolio</title>
+</svelte:head>
+
+<Layout>
+  <!-- Navigation Links -->
+  <div slot="nav-links" class="flex space-x-4">
+    <a href="#home" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+      {$_('nav.home')}
+    </a>
+    <a href="#about" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+      {$_('nav.about')}
+    </a>
+    <a href="#projects" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+      {$_('nav.projects')}
+    </a>
+    <a href="#contact" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+      {$_('nav.contact')}
+    </a>
+  </div>
+  
+  <!-- Desktop Language Selector -->
+  <div slot="language-selector">
+    <LanguageSelector />
+  </div>
+  
+  <!-- Mobile Navigation Links -->
+  <div slot="mobile-nav-links">
+    <a href="#home" class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+      {$_('nav.home')}
+    </a>
+    <a href="#about" class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+      {$_('nav.about')}
+    </a>
+    <a href="#projects" class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+      {$_('nav.projects')}
+    </a>
+    <a href="#contact" class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+      {$_('nav.contact')}
+    </a>
+  </div>
+  
+  <!-- Mobile Language Selector -->
+  <div slot="mobile-language-selector">
+    <LanguageSelector isMobile={true} />
+  </div>
+  
+  <!-- Main Content -->
+  <div class="space-y-20">
+    
+    <!-- Hero Section -->
+    <section id="home" class="text-center py-20">
+      <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+        {$_('hero.title')}
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+        {$_('hero.subtitle')}
+      </p>
+      <a 
+        href="#projects" 
+        class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+      >
+        {$_('hero.cta')}
+      </a>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-20">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">
+          {$_('about.title')}
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
+          {$_('about.description')}
+        </p>
+        
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div class="text-3xl font-bold text-blue-600 mb-2">3+</div>
+            <div class="text-gray-600 dark:text-gray-300">{$_('about.experience')}</div>
+          </div>
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div class="text-3xl font-bold text-blue-600 mb-2">20+</div>
+            <div class="text-gray-600 dark:text-gray-300">{$_('about.projects')}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section id="projects" class="py-20">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {$_('projects.title')}
+        </h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Project cards would go here -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+          <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500"></div>
+          <div class="p-6">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              Project Name
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Project description goes here...
+            </p>
+            <div class="flex justify-between">
+              <button class="text-blue-600 dark:text-blue-400 hover:underline">
+                {$_('projects.viewProject')}
+              </button>
+              <button class="text-blue-600 dark:text-blue-400 hover:underline">
+                {$_('projects.viewCode')}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {$_('contact.title')}
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
+          {$_('contact.subtitle')}
+        </p>
+        
+        <div class="bg-white dark:bg-
